@@ -7,6 +7,9 @@ namespace Test
     public class TestContext : DbContext
     {
         public DbSet<Blog> Blogs { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseInMemoryDatabase("TestDb");
     }
 
     public class Blog
