@@ -1,31 +1,56 @@
 ﻿#nullable enable
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 
 namespace Test
 {
     public class TestContext : DbContext
     {
-        public DbSet<Blog> Blogs { get; set; } = null!;
+        public DbSet<Author> Authors { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseInMemoryDatabase("TestDb");
+        {
+            options.UseInMemoryDatabase("TestDb");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Blog>()
+                .HasDiscriminator<bool>(nameof(Blog.IsPhotoBlog))
+                .HasValue<DevBlog>(false)
+                .HasValue<PhotoBlog>(true);
+        }
     }
 
-    public class Blog
+    public class Author
     {
         public int Id { get; set; }
-        public string Title { get; set; } = null!;
-
-        public List<Post> Posts { get; } = new List<Post>();
+        public Blog? Blog { get; set; }
     }
 
-    public class Post
+    public abstract class Blog
     {
         public int Id { get; set; }
+        public bool IsPhotoBlog { get; set; }
         public string Title { get; set; } = null!;
+    }
 
-        public int BlogId { get; set; }
+    public class DevBlog : Blog
+    {
+        public DevBlog()
+        {
+            IsPhotoBlog = false;
+        }
+    }
+
+    public class PhotoBlog : Blog
+    {
+        public PhotoBlog()
+        {
+            IsPhotoBlog = true;
+        }
+
+        //public int NumberOfPhotos { get; set; } // stops working when commented in
     }
 }

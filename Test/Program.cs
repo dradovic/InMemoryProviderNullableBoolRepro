@@ -1,43 +1,37 @@
 ﻿#nullable enable
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace Test
 {
     class Program
     {
-        public class Query
-        {
-            private readonly string _title;
-
-            public Query(string title)
-            {
-                _title = title;
-            }
-
-            public Expression<Func<Blog, bool>> Filter => b => b.Title == _title;
-        }
-
         static void Main(string[] args)
         {
             using (var db = new TestContext())
             {
-                db.Add(new Blog
+                db.Add(new Author
                 {
-                    Title = "First Blog",
-                    Posts = {
-                        new Post { Title = "First Post" }
+                    Blog = new DevBlog
+                    {
+                        Title = "Dev Blog",
                     }
                 });
-                db.Add(new Blog { Title = "Second Blog" });
-                db.SaveChanges();
-
-                var query = new Query("First Blog");
-                foreach (var blog in db.Blogs.Where(query.Filter).Include(b => b.Posts))
+                db.Add(new Author
                 {
-                    Console.WriteLine($"Found a blog called 'First Blog' with Id {blog.Id} and {blog.Posts.Count} post(s).");
+                    Blog = new PhotoBlog
+                    {
+                        Title = "Photo Blog",
+                    }
+                });
+                db.SaveChanges();
+            }
+
+            using (var db = new TestContext())
+            { 
+                foreach (var author in db.Authors.Include(a => a.Blog))
+                {
+                    Console.WriteLine($"Found author {author.Id} with Blog {author.Blog!.Title} of type {author.Blog.GetType()}.");
                 }
             }
         }
