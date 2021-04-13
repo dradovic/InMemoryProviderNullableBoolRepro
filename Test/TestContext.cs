@@ -1,5 +1,4 @@
-﻿#nullable enable
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Test
 {
@@ -26,14 +25,14 @@ namespace Test
     public class Author
     {
         public int Id { get; set; }
-        public Blog? Blog { get; set; }
+        public Blog Blog { get; set; }
     }
 
     public abstract class Blog
     {
         public int Id { get; set; }
         public bool IsPhotoBlog { get; set; }
-        public string Title { get; set; } = null!;
+        public string Title { get; set; }
     }
 
     public class DevBlog : Blog
