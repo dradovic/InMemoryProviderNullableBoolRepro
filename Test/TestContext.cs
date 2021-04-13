@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -16,5 +17,15 @@ namespace Test
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
+
+        public List<Post> Posts { get; } = new List<Post>();
+    }
+
+    public class Post
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = null!;
+
+        public int BlogId { get; set; }
     }
 }
