@@ -50,6 +50,6 @@ namespace Test
             IsPhotoBlog = true;
         }
 
-        //public int NumberOfPhotos { get; set; } // stops working when commented in
+        public int NumberOfPhotos { get; set; } // stops working when commented in
     }
 }
